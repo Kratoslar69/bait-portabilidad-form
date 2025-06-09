@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portabilidad Bait - Formulario</title>
+    <link href="https://fonts.googleapis.com/css2?family=Gotham:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Gotham', 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #1c8bd8 0%, #ffd100 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            max-width: 500px;
+            width: 100%;
+            animation: slideUp 0.6s ease-out;
+            border: 3px solid #ffd100;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            font-size: 48px;
+            font-weight: bold;
+            color: #000000;
+            margin-bottom: 5px;
+            letter-spacing: -2px;
+            text-transform: lowercase;
+            position: relative;
+        }
+
+        .logo::after {
+            content: "®";
+            font-size: 16px;
+            position: absolute;
+            top: 0;
+            right: -15px;
+        }
+
+        .wifi-icon {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            background: #ffd100;
+            border-radius: 50%;
+            position: relative;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+
+        .wifi-icon::before {
+            content: "📶";
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            font-size: 12px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 16px;
+            margin-bottom: 20px;
+            font-weight: 400;
+        }
+
+        .promo-banner {
+            background: linear-gradient(135deg, #ffd100, #f0c100);
+            color: #000000;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 25px;
+            font-weight: 700;
+            border: 2px solid #000000;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .promo-banner .price {
+            font-size: 24px;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .promo-banner .details {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #000000;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .required {
+            color: #e74c3c;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #dcdcdc;
+            border-radius: 12px;
+            font-size: 16px;
+            font-family: 'Gotham', sans-serif;
+            transition: all 0.3s ease;
+            background: #fafbfc;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #1c8bd8;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(28, 139, 216, 0.1);
+        }
+
+        .file-upload {
+            border: 2px dashed #1c8bd8;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            background: #f8f9ff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .file-upload:hover {
+            background: #f0f2ff;
+            border-color: #ffd100;
+        }
+
+        .file-upload input[type="file"] {
+            display: none;
+        }
+
+        .file-text {
+            color: #1c8bd8;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+            margin-top: 3px;
+            accent-color: #1c8bd8;
+        }
+
+        .checkbox-group label {
+            margin-bottom: 0;
+            font-size: 13px;
+            line-height: 1.4;
+            cursor: pointer;
+            color: #333;
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #1c8bd8, #1570b8);
+            color: white;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            font-family: 'Gotham', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .submit-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(28, 139, 216, 0.3);
+            background: linear-gradient(135deg, #1570b8, #1c8bd8);
+        }
+
+        .submit-btn:disabled {
+            background: #dcdcdc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .help-text {
+            font-size: 11px;
+            color: #666;
+            margin-top: 5px;
+            line-height: 1.3;
+        }
+
+        .warning-text {
+            font-size: 11px;
+            color: #e74c3c;
+            margin-top: 5px;
+            font-weight: 500;
+        }
+
+        .success-message {
+            display: none;
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .error-message {
+            display: none;
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #f5c6cb;
+        }
+
+        .brand-colors {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .color-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .color-yellow { background: #ffd100; }
+        .color-blue { background: #1c8bd8; }
+        .color-gray { background: #dcdcdc; }
+        .color-black { background: #000000; }
+
+        /* Estilos para la ayuda visual del ICC */
+        .icc-help {
+            margin-top: 10px;
+            padding: 15px;
+            background: #f8f9ff;
+            border-radius: 10px;
+            border: 1px solid #1c8bd8;
+        }
+
+        .icc-explanation {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .sim-card {
+            background: #f0f0f0;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 8px;
+            font-size: 10px;
+            position: relative;
+            min-height: 140px;
+        }
+
+        .sim-header {
+            font-size: 8px;
+            color: #666;
+            margin-bottom: 5px;
+            line-height: 1.2;
+        }
+
+        .sim-body {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 10px 0;
+        }
+
+        .sim-chip {
+            width: 20px;
+            height: 15px;
+            background: #gold;
+            border-radius: 2px;
+            border: 1px solid #ccc;
+        }
+
+        .bait-logo {
+            font-weight: bold;
+            color: #1c8bd8;
+            font-size: 12px;
+        }
+
+        .icc-section {
+            margin-top: 8px;
+            text-align: center;
+        }
+
+        .barcode {
+            font-size: 8px;
+            letter-spacing: 0.5px;
+            color: #000;
+            margin-bottom: 2px;
+        }
+
+        .icc-number {
+            background: rgba(28, 139, 216, 0.2);
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-weight: bold;
+            font-size: 9px;
+            color: #1c8bd8;
+            border: 1px solid #1c8bd8;
+        }
+
+        .icc-arrow {
+            font-size: 10px;
+            color: #1c8bd8;
+            margin-top: 3px;
+            font-weight: bold;
+        }
+
+        .icc-instructions {
+            font-size: 12px;
+        }
+
+        .icc-instructions ul {
+            margin: 8px 0;
+            padding-left: 15px;
+        }
+
+        .icc-instructions li {
+            margin-bottom: 4px;
+            line-height: 1.3;
+        }
+
+        .icc-instructions code {
+            background: #e8f5e8;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-family: monospace;
+            color: #2d5a2d;
+        }
+
+        .important-note {
+            background: linear-gradient(135deg, #ffd100, #f0c100);
+            border: 2px solid #000000;
+            border-radius: 8px;
+            padding: 10px;
+            margin-top: 12px;
+            font-size: 11px;
+            color: #000000;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+
+        @media (max-width: 480px) {
+            .icc-explanation {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            
+            .sim-card {
+                min-height: 120px;
+            }
+        }
+
+        /* Estilo para inputs específicos de Bait */
+        .input-highlight {
+            border-color: #ffd100 !important;
+            background: #fffdf0;
+        }
+
+        .brand-footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 12px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="brand-colors">
+                <div class="color-dot color-yellow"></div>
+                <div class="color-dot color-blue"></div>
+                <div class="color-dot color-gray"></div>
+                <div class="color-dot color-black"></div>
+            </div>
+            <div class="logo">bait<span class="wifi-icon"></span></div>
+            <div class="subtitle">Formulario de Portabilidad</div>
+            <div class="promo-banner">
+                <span class="price">🎁 PRIMER MES GRATIS</span>
+                <span class="details">$100/mes × 12 meses + 9GB + Redes Sociales Ilimitadas</span>
+            </div>
+        </div>
+
+        <div id="successMessage" class="success-message">
+            ✅ ¡Solicitud enviada exitosamente! Te contactaremos pronto por WhatsApp.
+        </div>
+
+        <div id="errorMessage" class="error-message"></div>
+
+        <form id="portabilityForm">
+            <div class="form-group">
+                <label for="fullName">Nombre Completo <span class="required">*</span></label>
+                <input type="text" id="fullName" name="fullName" required placeholder="Ingresa tu nombre y apellidos">
+            </div>
+
+            <div class="form-group">
+                <label for="phoneToPort">Número a Portar <span class="required">*</span></label>
+                <input type="tel" id="phoneToPort" name="phoneToPort" required placeholder="5512345678" maxlength="10" minlength="10" pattern="[0-9]{10}">
+                <div class="help-text">Debe ser exactamente 10 dígitos numéricos</div>
+            </div>
+
+            <div class="form-group">
+                <label for="currentOperator">Compañía Actual <span class="required">*</span></label>
+                <select id="currentOperator" name="currentOperator" required>
+                    <option value="">Selecciona tu operadora actual</option>
+                    <option value="telcel">Telcel</option>
+                    <option value="att">AT&T</option>
+                    <option value="movistar">Movistar</option>
+                    <option value="unefon">Unefon</option>
+                    <option value="virgin">Virgin Mobile</option>
+                    <option value="weex">Weex</option>
+                    <option value="otro">Otro</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="nip">Código NIP <span class="required">*</span></label>
+                <input type="text" id="nip" name="nip" required placeholder="1234" maxlength="4" minlength="4" class="input-highlight" pattern="[0-9]{4}">
+                <div class="warning-text">⚠️ IMPORTANTE: Código obtenido enviando "NIP" al 051 desde tu línea actual (NO desde Bait)</div>
+                <div class="help-text">Debe ser exactamente 4 dígitos numéricos</div>
+            </div>
+
+            <div class="form-group">
+                <label for="iccNumber">Número ICC de tu SIM Bait <span class="required">*</span></label>
+                <input type="text" id="iccNumber" name="iccNumber" required placeholder="89521400631156235..." maxlength="19" minlength="19" class="input-highlight" pattern="[0-9]{19}">
+                <div class="icc-help">
+                    <div class="help-text">📍 <strong>¿Dónde encontrar tu ICC?</strong></div>
+                    <div class="icc-explanation">
+                        <div class="icc-visual">
+                            <div class="sim-card">
+                                <div class="sim-header">
+                                    <span>PIN1: 1234 PUK1: 55685284</span><br>
+                                    <span>PIN2: 1726 PUK2: 64102976</span>
+                                </div>
+                                <div class="sim-body">
+                                    <div class="sim-chip"></div>
+                                    <div class="bait-logo">bait</div>
+                                </div>
+                                <div class="icc-section">
+                                    <div class="barcode">|||||||||||||||||||||||||||||||</div>
+                                    <div class="icc-number">89521400631156235F</div>
+                                    <div class="icc-arrow">👆 Este número (sin la letra F)</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="icc-instructions">
+                            <strong>¿Dónde encontrar tu ICC?</strong>
+                            <ul>
+                                <li>🔍 <strong>Opción 1:</strong> En el código de barras de la tarjeta grande</li>
+                                <li>📱 <strong>Opción 2:</strong> En la micro SIM (tarjeta pequeña que va en el teléfono)</li>
+                                <li>⚠️ Copia solo los <strong>19 dígitos</strong> (sin letras al final)</li>
+                                <li>📝 Ejemplo: <code>8952140063115623525</code></li>
+                            </ul>
+                            <div class="important-note">
+                                <strong>📢 IMPORTANTE:</strong> Esta SIM debe coincidir con nuestros registros, ya que el mensaje de promoción solo se envió a SIMs específicas registradas en nuestro sistema.
+                                <br><br>
+                                <strong>⚠️ ADVERTENCIA:</strong> Si el número ICC no coincide con nuestros registros, la portabilidad no se procesará y el beneficio de regalo no será efectivo.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Correo Electrónico <span class="required">*</span></label>
+                <input type="email" id="email" name="email" required placeholder="tu@correo.com">
+            </div>
+
+            <div class="form-group">
+                <label for="idPhoto">Foto de Identificación (Opcional)</label>
+                <div class="file-upload" onclick="document.getElementById('idPhoto').click()">
+                    <div class="file-text">📷 Haz clic para subir foto de tu INE/ID</div>
+                    <input type="file" id="idPhoto" name="idPhoto" accept="image/*">
+                </div>
+            </div>
+
+            <div class="checkbox-group">
+                <input type="checkbox" id="termsAccept" name="termsAccept" required>
+                <label for="termsAccept">
+                    Acepto los términos y condiciones de portabilidad. Confirmo que los datos son correctos y autorizo el cambio de operadora. <span class="required">*</span>
+                </label>
+            </div>
+
+            <div class="checkbox-group">
+                <input type="checkbox" id="confirmNip" name="confirmNip" required>
+                <label for="confirmNip">
+                    Confirmo que obtuve el NIP desde la línea que quiero portar (NO desde la SIM Bait). <span class="required">*</span>
+                </label>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">
+                🚀 Enviar Solicitud de Portabilidad
+            </button>
+        </form>
+
+        <div class="brand-footer">
+            Servicio de telefonía con excelente cobertura • Bait®
+        </div>
+    </div>
+
+    <script>
+        // Configuración
+        const N8N_WEBHOOK_URL = 'https://tu-n8n-domain.com/webhook/form-portability';
+        
+        // Elementos del DOM
+        const form = document.getElementById('portabilityForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const successMessage = document.getElementById('successMessage');
+        const errorMessage = document.getElementById('errorMessage');
+
+        // Validación en tiempo real del teléfono
+        document.getElementById('phoneToPort').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 10) {
+                value = value.substring(0, 10);
+            }
+            e.target.value = value;
+            
+            // Validación visual
+            if (value.length === 10) {
+                e.target.style.borderColor = '#4CAF50';
+                e.target.style.background = '#f0fff0';
+            } else {
+                e.target.style.borderColor = '#1c8bd8';
+                e.target.style.background = '#fafbfc';
+            }
+        });
+
+        // Validación del NIP - Solo números, exactamente 4 dígitos
+        document.getElementById('nip').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, ''); // Solo números
+            if (value.length > 4) {
+                value = value.substring(0, 4);
+            }
+            e.target.value = value;
+            
+            // Validación visual
+            if (value.length === 4) {
+                e.target.style.borderColor = '#4CAF50';
+                e.target.style.background = '#f0fff0';
+            } else {
+                e.target.style.borderColor = '#ffd100';
+                e.target.style.background = '#fffdf0';
+            }
+        });
+
+        // Validación del ICC - Solo números, exactamente 19 dígitos
+        document.getElementById('iccNumber').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, ''); // Solo números
+            if (value.length > 19) {
+                value = value.substring(0, 19);
+            }
+            e.target.value = value;
+            
+            // Validación visual
+            if (value.length === 19) {
+                e.target.style.borderColor = '#4CAF50';
+                e.target.style.background = '#f0fff0';
+            } else {
+                e.target.style.borderColor = '#ffd100';
+                e.target.style.background = '#fffdf0';
+            }
+        });
+
+        // Manejo del archivo
+        document.getElementById('idPhoto').addEventListener('change', function(e) {
+            const fileUpload = e.target.parentElement;
+            const fileText = fileUpload.querySelector('.file-text');
+            
+            if (e.target.files.length > 0) {
+                fileText.textContent = `📎 ${e.target.files[0].name}`;
+                fileUpload.style.background = '#e8f5e8';
+                fileUpload.style.borderColor = '#4CAF50';
+            } else {
+                fileText.textContent = '📷 Haz clic para subir foto de tu INE/ID';
+                fileUpload.style.background = '#f8f9ff';
+                fileUpload.style.borderColor = '#1c8bd8';
+            }
+        });
+
+        // Envío del formulario
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Deshabilitar botón
+            submitBtn.disabled = true;
+            submitBtn.textContent = '⏳ Enviando...';
+            
+            // Ocultar mensajes previos
+            successMessage.style.display = 'none';
+            errorMessage.style.display = 'none';
+
+            try {
+                // Obtener datos del formulario
+                const formData = new FormData(form);
+                
+                // Convertir a objeto JSON
+                const data = {
+                    fullName: formData.get('fullName'),
+                    phoneToPort: formData.get('phoneToPort'),
+                    currentOperator: formData.get('currentOperator'),
+                    nip: formData.get('nip'),
+                    iccNumber: formData.get('iccNumber'),
+                    email: formData.get('email') || '',
+                    termsAccept: formData.get('termsAccept') === 'on',
+                    confirmNip: formData.get('confirmNip') === 'on',
+                    timestamp: new Date().toISOString(),
+                    formId: 'BAIT_' + Date.now(),
+                    source: 'whatsapp_bot',
+                    brand: 'bait_official'
+                };
+
+                // Validaciones adicionales
+                if (data.phoneToPort.length !== 10 || !/^\d{10}$/.test(data.phoneToPort)) {
+                    throw new Error('El número a portar debe tener exactamente 10 dígitos numéricos');
+                }
+
+                if (data.nip.length !== 4 || !/^\d{4}$/.test(data.nip)) {
+                    throw new Error('El NIP debe tener exactamente 4 dígitos numéricos');
+                }
+
+                if (data.iccNumber.length !== 19 || !/^\d{19}$/.test(data.iccNumber)) {
+                    throw new Error('El número ICC debe tener exactamente 19 dígitos numéricos');
+                }
+
+                if (!data.email || !data.email.includes('@')) {
+                    throw new Error('El correo electrónico es obligatorio y debe ser válido');
+                }
+
+                if (!data.termsAccept || !data.confirmNip) {
+                    throw new Error('Debes aceptar todos los términos y confirmaciones');
+                }
+
+                // Enviar a N8N
+                const response = await fetch(N8N_WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (!response.ok) {
+                    throw new Error('Error en el servidor');
+                }
+
+                // Éxito
+                successMessage.style.display = 'block';
+                form.style.display = 'none';
+                
+                // Scroll al mensaje de éxito
+                successMessage.scrollIntoView({ behavior: 'smooth' });
+
+            } catch (error) {
+                // Error
+                errorMessage.textContent = '❌ ' + error.message;
+                errorMessage.style.display = 'block';
+                
+                // Rehabilitar botón
+                submitBtn.disabled = false;
+                submitBtn.textContent = '🚀 Enviar Solicitud de Portabilidad';
+                
+                // Scroll al error
+                errorMessage.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+
+        // Auto-fill desde URL params (si viene de WhatsApp)
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('phone')) {
+            const whatsappNumber = urlParams.get('phone');
+            if (whatsappNumber && whatsappNumber.length >= 10) {
+                document.getElementById('phoneToPort').value = whatsappNumber.slice(-10);
+                document.getElementById('phoneToPort').dispatchEvent(new Event('input'));
+            }
+        }
+    </script>
+</body>
+</html>
