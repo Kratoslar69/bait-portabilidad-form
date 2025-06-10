@@ -235,6 +235,14 @@
             line-height: 1.3;
         }
 
+        .info-text {
+            font-size: 11px;
+            color: #1c8bd8;
+            margin-top: 5px;
+            line-height: 1.3;
+            font-weight: 500;
+        }
+
         .warning-text {
             font-size: 11px;
             color: #e74c3c;
@@ -421,6 +429,12 @@
             font-size: 12px;
             color: #666;
         }
+
+        /* Estilos para el campo de número de contacto */
+        .contact-highlight {
+            border-color: #4CAF50 !important;
+            background: #f8fff8;
+        }
     </style>
 </head>
 <body>
@@ -521,8 +535,10 @@
             </div>
 
             <div class="form-group">
-                <label for="email">Correo Electrónico <span class="required">*</span></label>
-                <input type="email" id="email" name="email" required placeholder="tu@correo.com">
+                <label for="contactPhone">Número de Contacto Alternativo <span class="required">*</span></label>
+                <input type="tel" id="contactPhone" name="contactPhone" required placeholder="5587654321" maxlength="10" minlength="10" pattern="[0-9]{10}" class="contact-highlight">
+                <div class="info-text">📱 Este número debe ser diferente al que vas a portar</div>
+                <div class="help-text">Lo usaremos para contactarte sobre promociones exclusivas y en caso de algún inconveniente durante el proceso de portabilidad</div>
             </div>
 
             <div class="form-group">
@@ -567,7 +583,7 @@
         const successMessage = document.getElementById('successMessage');
         const errorMessage = document.getElementById('errorMessage');
 
-        // Validación en tiempo real del teléfono
+        // Validación en tiempo real del teléfono a portar
         document.getElementById('phoneToPort').addEventListener('input', function(e) {
             let value = e.target.value.replace(/\D/g, '');
             if (value.length > 10) {
@@ -583,7 +599,54 @@
                 e.target.style.borderColor = '#1c8bd8';
                 e.target.style.background = '#fafbfc';
             }
+            
+            // Validar que sea diferente al número de contacto
+            validateDifferentNumbers();
         });
+
+        // Validación en tiempo real del número de contacto
+        document.getElementById('contactPhone').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 10) {
+                value = value.substring(0, 10);
+            }
+            e.target.value = value;
+            
+            // Validación visual
+            if (value.length === 10) {
+                e.target.style.borderColor = '#4CAF50';
+                e.target.style.background = '#f0fff0';
+            } else {
+                e.target.style.borderColor = '#4CAF50';
+                e.target.style.background = '#f8fff8';
+            }
+            
+            // Validar que sea diferente al número a portar
+            validateDifferentNumbers();
+        });
+
+        // Función para validar que los números sean diferentes
+        function validateDifferentNumbers() {
+            const phoneToPort = document.getElementById('phoneToPort').value;
+            const contactPhone = document.getElementById('contactPhone').value;
+            const contactInput = document.getElementById('contactPhone');
+            const helpText = contactInput.parentElement.querySelector('.help-text');
+            
+            if (phoneToPort.length === 10 && contactPhone.length === 10 && phoneToPort === contactPhone) {
+                contactInput.style.borderColor = '#e74c3c';
+                contactInput.style.background = '#fdf2f2';
+                helpText.style.color = '#e74c3c';
+                helpText.textContent = '❌ Este número debe ser diferente al que vas a portar';
+                return false;
+            } else if (contactPhone.length === 10) {
+                contactInput.style.borderColor = '#4CAF50';
+                contactInput.style.background = '#f0fff0';
+                helpText.style.color = '#1c8bd8';
+                helpText.textContent = 'Lo usaremos para contactarte sobre promociones exclusivas y en caso de algún inconveniente durante el proceso de portabilidad';
+                return true;
+            }
+            return true;
+        }
 
         // Validación del NIP - Solo números, exactamente 4 dígitos
         document.getElementById('nip').addEventListener('input', function(e) {
@@ -660,7 +723,7 @@
                     currentOperator: formData.get('currentOperator'),
                     nip: formData.get('nip'),
                     iccNumber: formData.get('iccNumber'),
-                    email: formData.get('email') || '',
+                    contactPhone: formData.get('contactPhone'),
                     termsAccept: formData.get('termsAccept') === 'on',
                     confirmNip: formData.get('confirmNip') === 'on',
                     timestamp: new Date().toISOString(),
@@ -674,16 +737,20 @@
                     throw new Error('El número a portar debe tener exactamente 10 dígitos numéricos');
                 }
 
+                if (data.contactPhone.length !== 10 || !/^\d{10}$/.test(data.contactPhone)) {
+                    throw new Error('El número de contacto debe tener exactamente 10 dígitos numéricos');
+                }
+
+                if (data.phoneToPort === data.contactPhone) {
+                    throw new Error('El número de contacto debe ser diferente al número que vas a portar');
+                }
+
                 if (data.nip.length !== 4 || !/^\d{4}$/.test(data.nip)) {
                     throw new Error('El NIP debe tener exactamente 4 dígitos numéricos');
                 }
 
                 if (data.iccNumber.length !== 19 || !/^\d{19}$/.test(data.iccNumber)) {
                     throw new Error('El número ICC debe tener exactamente 19 dígitos numéricos');
-                }
-
-                if (!data.email || !data.email.includes('@')) {
-                    throw new Error('El correo electrónico es obligatorio y debe ser válido');
                 }
 
                 if (!data.termsAccept || !data.confirmNip) {
@@ -730,9 +797,3 @@
             const whatsappNumber = urlParams.get('phone');
             if (whatsappNumber && whatsappNumber.length >= 10) {
                 document.getElementById('phoneToPort').value = whatsappNumber.slice(-10);
-                document.getElementById('phoneToPort').dispatchEvent(new Event('input'));
-            }
-        }
-    </script>
-</body>
-</html>
