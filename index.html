@@ -778,4 +778,10 @@
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.get('phone')) {
             const whatsappNumber = urlParams.get('phone');
-            if (whatsappNumber && whatsappNumber.length >= 10)
+            if (whatsappNumber && whatsappNumber.length >= 10) {
+                document.getElementById('phoneToPort').value = whatsappNumber.slice(-10);
+            }
+        }
+    </script>
+</body>
+</html>
