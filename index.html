@@ -476,13 +476,13 @@
                 <label for="currentOperator">Compañía Actual <span class="required">*</span></label>
                 <select id="currentOperator" name="currentOperator" required>
                     <option value="">Selecciona tu operadora actual</option>
-                    <option value="telcel">Telcel</option>
-                    <option value="att">AT&T</option>
-                    <option value="movistar">Movistar</option>
-                    <option value="unefon">Unefon</option>
-                    <option value="virgin">Virgin Mobile</option>
-                    <option value="weex">Weex</option>
-                    <option value="otro">Otro</option>
+                    <option value="Telcel">Telcel</option>
+                    <option value="AT&T">AT&T</option>
+                    <option value="Movistar">Movistar</option>
+                    <option value="Unefon">Unefon</option>
+                    <option value="Virgin Mobile">Virgin Mobile</option>
+                    <option value="Weex">Weex</option>
+                    <option value="Otro">Otro</option>
                 </select>
             </div>
 
@@ -535,18 +535,16 @@
             </div>
 
             <div class="form-group">
-                <label for="contactPhone">Número de Contacto Alternativo <span class="required">*</span></label>
-                <input type="tel" id="contactPhone" name="contactPhone" required placeholder="5587654321" maxlength="10" minlength="10" pattern="[0-9]{10}" class="contact-highlight">
+                <label for="alternateContact">Número de Contacto Alternativo <span class="required">*</span></label>
+                <input type="tel" id="alternateContact" name="alternateContact" required placeholder="5587654321" maxlength="10" minlength="10" pattern="[0-9]{10}" class="contact-highlight">
                 <div class="info-text">📱 Este número debe ser diferente al que vas a portar</div>
                 <div class="help-text">Lo usaremos para contactarte sobre promociones exclusivas y en caso de algún inconveniente durante el proceso de portabilidad</div>
             </div>
 
             <div class="form-group">
-                <label for="idPhoto">Foto de Identificación (Opcional)</label>
-                <div class="file-upload" onclick="document.getElementById('idPhoto').click()">
-                    <div class="file-text">📷 Haz clic para subir foto de tu INE/ID</div>
-                    <input type="file" id="idPhoto" name="idPhoto" accept="image/*">
-                </div>
+                <label for="email">Email (Opcional)</label>
+                <input type="email" id="email" name="email" placeholder="tu@email.com">
+                <div class="help-text">Para enviarte confirmaciones y actualizaciones</div>
             </div>
 
             <div class="checkbox-group">
@@ -574,8 +572,8 @@
     </div>
 
     <script>
-        // Configuración
-        const N8N_WEBHOOK_URL = 'https://devwebhookn8n.m4metadryve.mx/webhook/form-portability';
+        // CONFIGURACIÓN CORREGIDA - URL WEBHOOK CORRECTA
+        const N8N_WEBHOOK_URL = 'https://devn8n.m4metadryve.mx/webhook-test/Formulario_Portabilidad_bait';
         
         // Elementos del DOM
         const form = document.getElementById('portabilityForm');
@@ -605,7 +603,7 @@
         });
 
         // Validación en tiempo real del número de contacto
-        document.getElementById('contactPhone').addEventListener('input', function(e) {
+        document.getElementById('alternateContact').addEventListener('input', function(e) {
             let value = e.target.value.replace(/\D/g, '');
             if (value.length > 10) {
                 value = value.substring(0, 10);
@@ -628,17 +626,17 @@
         // Función para validar que los números sean diferentes
         function validateDifferentNumbers() {
             const phoneToPort = document.getElementById('phoneToPort').value;
-            const contactPhone = document.getElementById('contactPhone').value;
-            const contactInput = document.getElementById('contactPhone');
+            const alternateContact = document.getElementById('alternateContact').value;
+            const contactInput = document.getElementById('alternateContact');
             const helpText = contactInput.parentElement.querySelector('.help-text');
             
-            if (phoneToPort.length === 10 && contactPhone.length === 10 && phoneToPort === contactPhone) {
+            if (phoneToPort.length === 10 && alternateContact.length === 10 && phoneToPort === alternateContact) {
                 contactInput.style.borderColor = '#e74c3c';
                 contactInput.style.background = '#fdf2f2';
                 helpText.style.color = '#e74c3c';
                 helpText.textContent = '❌ Este número debe ser diferente al que vas a portar';
                 return false;
-            } else if (contactPhone.length === 10) {
+            } else if (alternateContact.length === 10) {
                 contactInput.style.borderColor = '#4CAF50';
                 contactInput.style.background = '#f0fff0';
                 helpText.style.color = '#1c8bd8';
@@ -684,22 +682,6 @@
             }
         });
 
-        // Manejo del archivo
-        document.getElementById('idPhoto').addEventListener('change', function(e) {
-            const fileUpload = e.target.parentElement;
-            const fileText = fileUpload.querySelector('.file-text');
-            
-            if (e.target.files.length > 0) {
-                fileText.textContent = `📎 ${e.target.files[0].name}`;
-                fileUpload.style.background = '#e8f5e8';
-                fileUpload.style.borderColor = '#4CAF50';
-            } else {
-                fileText.textContent = '📷 Haz clic para subir foto de tu INE/ID';
-                fileUpload.style.background = '#f8f9ff';
-                fileUpload.style.borderColor = '#1c8bd8';
-            }
-        });
-
         // Envío del formulario
         form.addEventListener('submit', async function(e) {
             e.preventDefault();
@@ -716,14 +698,15 @@
                 // Obtener datos del formulario
                 const formData = new FormData(form);
                 
-                // Convertir a objeto JSON
+                // ESTRUCTURA DE DATOS CORREGIDA PARA COINCIDIR CON N8N
                 const data = {
                     fullName: formData.get('fullName'),
                     phoneToPort: formData.get('phoneToPort'),
                     currentOperator: formData.get('currentOperator'),
                     nip: formData.get('nip'),
                     iccNumber: formData.get('iccNumber'),
-                    contactPhone: formData.get('contactPhone'),
+                    alternateContact: formData.get('alternateContact'), // CORREGIDO
+                    email: formData.get('email') || '',
                     termsAccept: formData.get('termsAccept') === 'on',
                     confirmNip: formData.get('confirmNip') === 'on',
                     timestamp: new Date().toISOString(),
@@ -737,11 +720,11 @@
                     throw new Error('El número a portar debe tener exactamente 10 dígitos numéricos');
                 }
 
-                if (data.contactPhone.length !== 10 || !/^\d{10}$/.test(data.contactPhone)) {
+                if (data.alternateContact.length !== 10 || !/^\d{10}$/.test(data.alternateContact)) {
                     throw new Error('El número de contacto debe tener exactamente 10 dígitos numéricos');
                 }
 
-                if (data.phoneToPort === data.contactPhone) {
+                if (data.phoneToPort === data.alternateContact) {
                     throw new Error('El número de contacto debe ser diferente al número que vas a portar');
                 }
 
@@ -795,5 +778,4 @@
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.get('phone')) {
             const whatsappNumber = urlParams.get('phone');
-            if (whatsappNumber && whatsappNumber.length >= 10) {
-                document.getElementById('phoneToPort').value = whatsappNumber.slice(-10);
+            if (whatsappNumber && whatsappNumber.length >= 10)
